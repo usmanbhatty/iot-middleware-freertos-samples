@@ -20,6 +20,9 @@
 #include "freertos/task.h"
 #include "freertos/semphr.h"
 #include "nvs_flash.h"
+
+#include "wifi_ap_captive_portal.h"  // ✅ Include Wi-Fi AP functions
+
 /*-----------------------------------------------------------*/
 
 #define NR_OF_IP_ADDRESSES_TO_WAIT_FOR     1
@@ -304,17 +307,35 @@ static void initialize_time()
 
 void app_main( void )
 {
-    ESP_ERROR_CHECK( nvs_flash_init() );
-    ESP_ERROR_CHECK( esp_netif_init() );
-    ESP_ERROR_CHECK( esp_event_loop_create_default() );
-    /*Allow other core to finish initialization */
-    vTaskDelay( pdMS_TO_TICKS( 100 ) );
+    // ESP_ERROR_CHECK( nvs_flash_init() );
+    // ESP_ERROR_CHECK( esp_netif_init() );
+    // ESP_ERROR_CHECK( esp_event_loop_create_default() );
+    // /*Allow other core to finish initialization */
+    // vTaskDelay( pdMS_TO_TICKS( 100 ) );
 
-    ( void ) example_connect();
+    // ( void ) example_connect();
 
-    initialize_time();
+    // initialize_time();
 
-    vStartDemoTask();
+    // vStartDemoTask();
+    
+  ////////////////////////////////////////////////////
+ 
+    // following is custom try
+   
+    ESP_LOGI("MAIN", "Checking for stored Wi-Fi credentials...");
+
+    if (connect_to_stored_wifi() == ESP_OK) {
+        ESP_LOGI("MAIN", "✅ Successfully connected to Wi-Fi! Staying in station mode.");
+        return;
+    }
+
+    ESP_LOGW("MAIN", "⚠ No valid Wi-Fi credentials found. Starting AP mode...");
+    wifi_init_softap();
+
+    
+    // Continue with the rest of Azure IoT FreeRTOS setup...
+    
 }
 /*-----------------------------------------------------------*/
 
