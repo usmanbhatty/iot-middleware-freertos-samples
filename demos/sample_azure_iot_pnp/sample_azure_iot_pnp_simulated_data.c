@@ -472,6 +472,7 @@ uint32_t ulCreateTelemetry( uint8_t * pucTelemetryData,
                             uint32_t ulTelemetryDataSize,
                             uint32_t * ulTelemetryDataLength )
 {
+    xDeviceCurrentTemperature = ( rand() % 30 ) + 10; // Generates values between 10°C and 40°C
     int result = snprintf( ( char * ) pucTelemetryData, ulTelemetryDataSize,
                            sampleazureiotMESSAGE, xDeviceCurrentTemperature );
 
